@@ -1,0 +1,34 @@
+# Dependabot configuration.
+#
+# This project installs with pnpm (pnpm-lock.yaml). Dependabot's "npm"
+# ecosystem covers pnpm lockfiles too. `cooldown` below mirrors pnpm's
+# `minimumReleaseAge` in pnpm-workspace.yaml, so Dependabot never proposes a
+# version that pnpm would refuse to install.
+#
+# `cooldown` holds a routine dependency bump until the release has been public
+# for 7 days. A hijacked release is typically caught and unpublished within
+# hours, so the delay means a poisoned version expires before it is ever
+# proposed here. Same reasoning as pnpm's `minimumReleaseAge: 10080`.
+#
+# Cooldown applies to version updates only — Dependabot security updates are
+# exempt by design, so a genuine vulnerability fix still lands immediately
+# instead of waiting out the delay.
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+      semver-major-days: 7
+      semver-minor-days: 7
+      semver-patch-days: 7
+    groups:
+      # Routine bumps arrive as one PR instead of one per package. Majors stay
+      # ungrouped so each potentially breaking change gets its own review.
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    open-pull-requests-limit: 5
