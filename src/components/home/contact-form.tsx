@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 
 import { contactFormEndpoint, isContactFormEnabled } from "@/lib/contact-form";
 import { contactEmail } from "@/lib/content";
@@ -88,9 +88,13 @@ const STATUS_MESSAGES: Record<SubmitState, string> = {
  */
 const ContactForm = () => {
   const [state, setState] = useState<SubmitState>("idle");
+  // Set synchronously, before the request, so a second submit that lands
+  // before React re-renders the disabled button can't send it twice.
+  const isSendingRef = useRef(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSendingRef.current) return;
 
     if (!isContactFormEnabled) {
       setState("unconfigured");
@@ -98,6 +102,7 @@ const ContactForm = () => {
     }
 
     const form = event.currentTarget;
+    isSendingRef.current = true;
     setState("sending");
 
     try {
@@ -113,6 +118,8 @@ const ContactForm = () => {
       setState("sent");
     } catch {
       setState("error");
+    } finally {
+      isSendingRef.current = false;
     }
   };
 
@@ -121,15 +128,13 @@ const ContactForm = () => {
       {/*
         Honeypot. Hidden from people and assistive technology, so only bots
         fill it in; form services that support `_gotcha` drop those
-        submissions silently.
+        submissions silently. The label is for when the stylesheet doesn't
+        load and the field shows: it tells anyone who meets it what to do.
       */}
-      <input
-        autoComplete="off"
-        className="hidden"
-        name="_gotcha"
-        tabIndex={-1}
-        type="text"
-      />
+      <label className="hidden">
+        Leave this field empty
+        <input autoComplete="off" name="_gotcha" tabIndex={-1} type="text" />
+      </label>
       <div className="grid gap-8 sm:grid-cols-2">
         <Field autoComplete="name" label="Name" name="name" required />
         <Field
