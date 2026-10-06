@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   // elsewhere, and the regenerated files only showed up as untracked noise in
   // `git status` after every dev run.
   agentRules: false,
+  images: { unoptimized: true },
+  output: "export",
   turbopack: {
     root: __dirname,
   },
