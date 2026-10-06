@@ -7,6 +7,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import SkipNav from "@/components/skip-nav";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ogImage } from "@/lib/og-image";
 import { jsonLd, organizationSchema, websiteSchema } from "@/lib/schema";
 import { metadataBaseUrl } from "@/lib/utils";
 
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
   metadataBase: metadataBaseUrl,
   openGraph: {
     description: siteDescription,
+    images: [ogImage],
     locale: "en_US",
     siteName,
     title: siteName,
@@ -57,6 +59,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     description: siteDescription,
+    images: [ogImage],
     title: siteName,
   },
 };
