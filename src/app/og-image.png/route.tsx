@@ -1,23 +1,22 @@
 import { ImageResponse } from "next/og";
 
 import { LOGO_BARS } from "@/components/logo-mark";
+import { ogImage } from "@/lib/og-image";
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "";
 const siteDescription = process.env.NEXT_PUBLIC_SITE_META_DESCRIPTION ?? "";
 
-export const alt = siteDescription
-  ? `${siteName} — ${siteDescription}`
-  : siteName;
-export const size = { height: 630, width: 1200 };
-export const contentType = "image/png";
-// Rendered once at build time; `output: "export"` rejects dynamic routes.
+// Rendered once at build time and exported as `out/og-image.png`;
+// `output: "export"` rejects dynamic routes.
 export const dynamic = "force-static";
 
 /**
  * The default link-preview image for every page: the stripe mark and site
  * name in ink on a sand panel, framed by the vermilion field like the site.
+ * See `src/lib/og-image.ts` for why this is a route handler.
+ * @returns The 1200×630 PNG
  */
-export default async function OpengraphImage() {
+export function GET() {
   return new ImageResponse(
     <div
       style={{
@@ -72,6 +71,6 @@ export default async function OpengraphImage() {
         </div>
       </div>
     </div>,
-    { ...size }
+    { height: ogImage.height, width: ogImage.width }
   );
 }
