@@ -1,0 +1,146 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * 742 Studios palette.
+ *
+ * Signal vermilion is the identity colour: the field every page sits on. It
+ * fails contrast as text on sand (2.5:1), so orange text on light panels uses
+ * the darker rust instead, which clears 4.5:1. Vermilion text is only used on
+ * ink, where it clears 5:1.
+ *
+ * Components use the semantic names (paper, ink, muted, accent…). The
+ * `.panel-inverse` scope below swaps those same names, so a section can flip
+ * to the dark panel without any of its children knowing.
+ */
+:root {
+  --signal: #ff4a1c;
+  --field: var(--signal);
+  --on-field: #1d1a17;
+  --paper: #e9ded0;
+  --ink: #1d1a17;
+  --muted: #5c534a;
+  --accent: #ae2f0a;
+  --line: rgb(29 26 23 / 0.18);
+  --art-a: #1d1a17;
+  --art-b: #8a7f73;
+}
+
+.dark {
+  --field: #141210;
+  --on-field: #e9ded0;
+  --paper: #221f1b;
+  --ink: #e9ded0;
+  --muted: #b5aa9c;
+  --accent: #ff5a2e;
+  --line: rgb(233 222 208 / 0.16);
+  --art-a: #e9ded0;
+  --art-b: #6f665c;
+}
+
+.panel-inverse {
+  --paper: #1d1a17;
+  --ink: #e9ded0;
+  --muted: #b5aa9c;
+  --accent: #ff4a1c;
+  --line: rgb(233 222 208 / 0.16);
+  --art-a: #e9ded0;
+  --art-b: #6f665c;
+}
+
+.dark .panel-inverse {
+  --paper: #e9ded0;
+  --ink: #1d1a17;
+  --muted: #5c534a;
+  --accent: #ae2f0a;
+  --line: rgb(29 26 23 / 0.18);
+  --art-a: #1d1a17;
+  --art-b: #8a7f73;
+}
+
+@theme inline {
+  --font-sans:
+    var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-michroma), ui-sans-serif, sans-serif;
+
+  --color-signal: var(--signal);
+  --color-field: var(--field);
+  --color-on-field: var(--on-field);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+
+  /* shadcn/ui tokens, mapped onto the palette for the primitives in ui/. */
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: #b42318;
+
+  --radius: 1.75rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--field);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+
+  /*
+   * One focus style everywhere. It follows the surrounding ink colour, so it
+   * stays at full contrast on sand, on the inverse panel, and on the field.
+   */
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--signal);
+    color: #1d1a17;
+  }
+}
+
+/*
+ * The hero ribbon draws in once, line by line from the centre outwards.
+ * It is the page's only unprompted motion, and it is skipped entirely for
+ * people who ask for reduced motion.
+ */
+@keyframes stripe-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.stripe-animate line {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: stripe-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i) * 9ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stripe-animate line {
+    animation: none;
+  }
+}
