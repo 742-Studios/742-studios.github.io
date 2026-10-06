@@ -69,7 +69,7 @@ Section.displayName = "Section";
  */
 const Privacy = () => {
   return (
-    <div className="mx-auto max-w-[1440px] px-2 sm:px-4 lg:px-6">
+    <div className="mx-auto max-w-360 px-2 sm:px-4 lg:px-6">
       <Panel
         as="main"
         className="px-6 py-16 sm:px-10 lg:px-14 lg:py-24"
