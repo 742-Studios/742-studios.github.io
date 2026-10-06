@@ -5,14 +5,34 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
+  # The container below must carry the exact browser builds that the installed
+  # @playwright/test expects, or every test fails at browser launch. A
+  # hard-coded image tag drifts the moment a Dependabot bump moves the
+  # lockfile, so read the version the lockfile actually resolved instead.
+  playwright-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.lockfile.outputs.version }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Read @playwright/test version from pnpm-lock.yaml
+      id: lockfile
+      run: |
+        version=$(grep -m1 -oE "^  '@playwright/test@[0-9]+\.[0-9]+\.[0-9]+'" pnpm-lock.yaml | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
+        if [ -z "$version" ]; then
+          echo "::error::Could not find @playwright/test in pnpm-lock.yaml"
+          exit 1
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
   test:
+    needs: playwright-version
     timeout-minutes: 60
     runs-on: ubuntu-latest
     # Run inside Playwright's official image: browsers and all OS dependencies
     # are prebaked, so there is no `playwright install --with-deps` apt step to
-    # hang on. Pin the tag to the @playwright/test version in package.json.
+    # hang on. The tag follows the locked @playwright/test version (see above).
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      image: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-noble
       options: --user 1001
     env:
       NEXT_PUBLIC_SITE_URL: https://www.nextstarter.app
