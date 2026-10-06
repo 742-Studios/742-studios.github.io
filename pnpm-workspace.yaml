@@ -45,6 +45,18 @@ minimumReleaseAge: 10080
 # @next/eslint-plugin-next > fast-glob > micromatch, a dev-only lint path that
 # expands glob patterns from our own config, never untrusted input. Remove
 # this once braces >=3.0.4 ships and the lockfile picks it up.
+#
+# GHSA-68fv-2mgg-jv7q (source-map-js <1.2.2, event-loop DoS on crafted
+# source maps): the fix, 1.2.2, was published 2026-09-30 and is held back by
+# minimumReleaseAge until 2026-10-07. source-map-js is only reached through
+# postcss at build time, processing our own CSS. Remove this once the
+# lockfile resolves source-map-js >=1.2.2.
 auditConfig:
   ignoreGhsas:
     - GHSA-vfj7-8cjw-p6xm
+    - GHSA-68fv-2mgg-jv7q
+
+# serve 14.2.6 (the local/CI static server for the export) pins compression
+# 1.8.1, which is affected by GHSA-vc2v-76pw-4v95. Force the patched release.
+overrides:
+  compression: ">=1.8.2"

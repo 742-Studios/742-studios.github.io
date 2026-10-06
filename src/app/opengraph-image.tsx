@@ -10,6 +10,8 @@ export const alt = siteDescription
   : siteName;
 export const size = { height: 630, width: 1200 };
 export const contentType = "image/png";
+// Rendered once at build time; `output: "export"` rejects dynamic routes.
+export const dynamic = "force-static";
 
 /**
  * The default link-preview image for every page: the stripe mark and site
