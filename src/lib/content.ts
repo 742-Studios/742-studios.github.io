@@ -6,7 +6,14 @@
  * touching any component markup.
  */
 
-export const contactEmail = "hello@742studios.dev";
+import { privacyContactEmail } from "@/lib/privacy";
+
+/**
+ * The studio's public email address, shown in the footer and the Contact
+ * section. It is the same inbox as privacy enquiries, so it comes from
+ * `NEXT_PUBLIC_PRIVACY_EMAIL` (see `lib/privacy.ts`). Every build must set it.
+ */
+export const contactEmail = privacyContactEmail;
 
 export const hero = {
   intro: "Independent design and engineering studio",
