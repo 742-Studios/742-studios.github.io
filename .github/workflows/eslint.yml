@@ -33,7 +33,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version-file: '.node-version'
           cache: 'pnpm'
 
       # A frozen install gives CI the ESLint version pnpm-lock.yaml pins along
