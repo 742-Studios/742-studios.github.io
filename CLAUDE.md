@@ -22,7 +22,7 @@ pnpm doctor                   # react-doctor scan (see .claude/skills/react-doct
 
 - Playwright's `webServer` runs `npm run start`, which serves the static export in `out/` (`output: "export"`; `next start` does not work with it), so **run `build` before `test`**. Locally it reuses a server that's already running on :3000, including `pnpm dev`. Tests load `.env` through dotenv, and `BASE_URL` overrides the target.
 - Lighthouse thresholds: accessibility, best-practices and SEO must score exactly 100; performance has a floor of 0.85. Don't add anything that loads third-party resources by default, because that would break best-practices.
-- Use pnpm, pinned through `packageManager` in `package.json`. CI runs `pnpm install --frozen-lockfile`, so commit `pnpm-lock.yaml` with any dependency change. `minimumReleaseAge` in `pnpm-workspace.yaml` blocks package versions published less than 7 days ago. Node 22 (`.node-version`).
+- Use pnpm, pinned through `packageManager` in `package.json`. CI runs `pnpm install --frozen-lockfile`, so commit `pnpm-lock.yaml` with any dependency change. `minimumReleaseAge` in `pnpm-workspace.yaml` blocks package versions published less than 7 days ago. Node 24 (`.node-version`, `engines.node`).
 
 ## Architecture
 

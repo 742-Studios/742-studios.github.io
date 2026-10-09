@@ -27,12 +27,15 @@ jobs:
       # else's storefront. Only affects which sections render; the audited URL
       # is the home page either way.
       NEXT_PUBLIC_PRO_URL: ${{ vars.NEXT_PUBLIC_PRO_URL }}
+      # The footer and Contact section render this address; without it they
+      # link to an empty mailto:.
+      NEXT_PUBLIC_PRIVACY_EMAIL: ${{ vars.NEXT_PUBLIC_PRIVACY_EMAIL }}
     steps:
     - uses: actions/checkout@v4
     - uses: pnpm/action-setup@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version-file: '.node-version'
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile

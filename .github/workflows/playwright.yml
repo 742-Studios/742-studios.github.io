@@ -44,19 +44,15 @@ jobs:
       # starter aren't pinned to someone else's storefront. When it is unset the
       # CTA assertion skips; when set, CI proves the button really points at it.
       NEXT_PUBLIC_PRO_URL: ${{ vars.NEXT_PUBLIC_PRO_URL }}
-      # The /thanks page's customer portal and support address, same deal: repo
-      # variables, and the assertions that need them skip when they are unset.
-      # Without these the checkout link alone switched the whole upsell surface
-      # on, so the thanks specs ran against a page whose portal link and support
-      # line were never configured.
-      NEXT_PUBLIC_POLAR_PORTAL_URL: ${{ vars.NEXT_PUBLIC_POLAR_PORTAL_URL }}
-      NEXT_PUBLIC_SUPPORT_EMAIL: ${{ vars.NEXT_PUBLIC_SUPPORT_EMAIL }}
+      # Matches nextjs.yml, so the tests build /privacy with the same contact
+      # section the deployed site has.
+      NEXT_PUBLIC_PRIVACY_EMAIL: ${{ vars.NEXT_PUBLIC_PRIVACY_EMAIL }}
     steps:
     - uses: actions/checkout@v4
     - uses: pnpm/action-setup@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version-file: '.node-version'
         cache: 'pnpm'
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
